@@ -50,7 +50,7 @@ var ReactDOMIDOperations = {
    * @param {*} value New value of the property.
    * @internal
    */
-  updatePropertyByID: function(id, name, value) {
+  updatePropertyByID: function(id, name, value, tagName, props) {
     var node = ReactMount.getNode(id);
     invariant(
       !INVALID_PROPERTY_ERRORS.hasOwnProperty(name),
@@ -62,9 +62,18 @@ var ReactDOMIDOperations = {
     // from the DOM node instead of inadvertantly setting to a string. This
     // brings us in line with the same behavior we have on initial render.
     if (value != null) {
-      DOMPropertyOperations.setValueForProperty(node, name, value);
+      DOMPropertyOperations.setValueForProperty(
+        node,
+        name,
+        value,
+        tagName,
+        props);
     } else {
-      DOMPropertyOperations.deleteValueForProperty(node, name);
+      DOMPropertyOperations.deleteValueForProperty(
+        node,
+        name,
+        tagName,
+        props);
     }
   },
 
@@ -76,14 +85,19 @@ var ReactDOMIDOperations = {
    * @param {string} name A property name to remove, see `DOMProperty`.
    * @internal
    */
-  deletePropertyByID: function(id, name, value) {
+  deletePropertyByID: function(id, name, value, tagName, props) {
     var node = ReactMount.getNode(id);
     invariant(
       !INVALID_PROPERTY_ERRORS.hasOwnProperty(name),
       'updatePropertyByID(...): %s',
       INVALID_PROPERTY_ERRORS[name]
     );
-    DOMPropertyOperations.deleteValueForProperty(node, name, value);
+    DOMPropertyOperations.deleteValueForProperty(
+      node,
+      name,
+      value,
+      tagName,
+      props);
   },
 
   /**

@@ -192,6 +192,18 @@ describe('ReactDOMComponent', function() {
       expect(container.firstChild.className).toEqual('');
     });
 
+    it("should ignore cutsom element attributes", function() {
+      var container = document.createElement('div');
+      React.render(<foo-bar custom-attribute='a-value' />, container);
+
+      expect(container.firstChild.getAttribute('custom-attribute')).toEqual('a-value');
+
+      var container = document.createElement('div');
+      React.render(<div is='a-value' />, container);
+
+      expect(container.firstChild.getAttribute('is')).toEqual('a-value');
+    });
+
     it("should clear a single style prop when changing 'style'", function() {
       var styles = {display: 'none', color: 'red'};
       var container = document.createElement('div');

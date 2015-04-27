@@ -333,7 +333,12 @@ ReactDOMComponent.Mixin = {
           propValue = CSSPropertyOperations.createMarkupForStyles(propValue);
         }
         var markup =
-          DOMPropertyOperations.createMarkupForProperty(propKey, propValue);
+          DOMPropertyOperations.createMarkupForProperty(
+            propKey,
+            propValue,
+            this._tag,
+            props
+          );
         if (markup) {
           ret += ' ' + markup;
         }
@@ -481,7 +486,9 @@ ReactDOMComponent.Mixin = {
           DOMProperty.isCustomAttribute(propKey)) {
         BackendIDOperations.deletePropertyByID(
           this._rootNodeID,
-          propKey
+          propKey,
+          this._tag,
+          nextProps
         );
       }
     }
@@ -536,11 +543,14 @@ ReactDOMComponent.Mixin = {
         }
       } else if (
           DOMProperty.isStandardName[propKey] ||
-          DOMProperty.isCustomAttribute(propKey)) {
+          DOMProperty.isCustomAttribute(propKey) ||
+          DOMProperty.isCustomElement(this._tag, nextProps)) {
         BackendIDOperations.updatePropertyByID(
           this._rootNodeID,
           propKey,
-          nextProp
+          nextProp,
+          this._tag,
+          nextProps
         );
       }
     }

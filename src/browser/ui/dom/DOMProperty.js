@@ -264,6 +264,19 @@ var DOMProperty = {
     return false;
   },
 
+
+  /**
+   * Checks whether an elements is a custom element.
+   * @method
+   */
+   isCustomElement: function(tagName, props) {
+    if (tagName && tagName.indexOf('-') > -1 ||
+        props && props.hasOwnProperty('is')) {
+      return true;
+    }
+    return false;
+  },
+
   /**
    * Returns the default property value for a DOM property (i.e., not an
    * attribute). Most default values are '' or false, but not all. Worse yet,

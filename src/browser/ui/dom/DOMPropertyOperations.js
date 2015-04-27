@@ -85,9 +85,14 @@ var DOMPropertyOperations = {
    *
    * @param {string} name
    * @param {*} value
+   * @param {string} tagName
+   * @param {array} props
    * @return {?string} Markup string, or null if the property was invalid.
    */
-  createMarkupForProperty: function(name, value) {
+  createMarkupForProperty: function(name, value, tagName, props) {
+    if (DOMProperty.isCustomElement(tagName, props)) {
+      return name + '=' + quoteAttributeValueForBrowser(value);
+    }
     if (DOMProperty.isStandardName.hasOwnProperty(name) &&
         DOMProperty.isStandardName[name]) {
       if (shouldIgnoreValue(name, value)) {
@@ -116,8 +121,13 @@ var DOMPropertyOperations = {
    * @param {DOMElement} node
    * @param {string} name
    * @param {*} value
+   * @param {string} tagName
+   * @param {array} props
    */
-  setValueForProperty: function(node, name, value) {
+  setValueForProperty: function(node, name, value, tagName, props) {
+    if (DOMProperty.isCustomElement(tagName, props)) {
+      node.setAttribute(name, '' + value);
+    }
     if (DOMProperty.isStandardName.hasOwnProperty(name) &&
         DOMProperty.isStandardName[name]) {
       var mutationMethod = DOMProperty.getMutationMethod[name];
@@ -156,8 +166,10 @@ var DOMPropertyOperations = {
    *
    * @param {DOMElement} node
    * @param {string} name
+   * @param {string} tagName
+   * @param {array} props
    */
-  deleteValueForProperty: function(node, name) {
+  deleteValueForProperty: function(node, name, tagName, props) {
     if (DOMProperty.isStandardName.hasOwnProperty(name) &&
         DOMProperty.isStandardName[name]) {
       var mutationMethod = DOMProperty.getMutationMethod[name];
@@ -176,7 +188,8 @@ var DOMPropertyOperations = {
           node[propName] = defaultValue;
         }
       }
-    } else if (DOMProperty.isCustomAttribute(name)) {
+    } else if (DOMProperty.isCustomAttribute(name) ||
+               DOMProperty.isCustomElement(tagName, props)) {
       node.removeAttribute(name);
     } else if (__DEV__) {
       warnUnknownProperty(name);
