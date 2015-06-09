@@ -446,7 +446,7 @@ ReactDOMComponent.Mixin = {
           propValue = CSSPropertyOperations.createMarkupForStyles(propValue);
         }
         var markup = null;
-        if (this._tag != null && this._tag.indexOf('-') >= 0) {
+        if (this._tag != null && (this._tag.indexOf('-') >= 0 || props.hasOwnProperty('is'))) {
           markup = DOMPropertyOperations.createMarkupForCustomAttribute(propKey, propValue);
         } else {
           markup = DOMPropertyOperations.createMarkupForProperty(propKey, propValue);
@@ -686,7 +686,7 @@ ReactDOMComponent.Mixin = {
         } else if (lastProp) {
           deleteListener(this._rootNodeID, propKey);
         }
-      } else if (this._tag.indexOf('-') >= 0) {
+      } else if (this._tag.indexOf('-') >= 0 || props.hasOwnProperty('is')) {
         BackendIDOperations.updateAttributeByID(
           this._rootNodeID,
           propKey,
